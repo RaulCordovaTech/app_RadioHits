@@ -1,0 +1,198 @@
+{% load static %}
+
+<!-- Indicadores Económicos -->
+<div class="w-4/5 scale-90 transform mx-auto">
+  <!-- Container principal con efecto de elevación -->
+  <div class="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:scale-105
+              before:absolute before:inset-0 before:bg-gradient-to-br 
+              before:from-red-900/85 before:via-red-800/80 before:to-gray-900/90 before:z-10 
+              bg-[url('{% static "imagenes/indicadores_bg.jpg" %}')] bg-cover bg-center bg-no-repeat
+              border border-gray-200">
+
+    <!-- Efectos decorativos de fondo -->
+    <div class="absolute inset-0 z-5">
+      <!-- Círculos decorativos -->
+      <div class="absolute top-3 right-3 w-24 h-24 bg-white opacity-5 rounded-full"></div>
+      <div class="absolute bottom-6 left-6 w-20 h-20 bg-white opacity-10 rounded-full"></div>
+      <div class="absolute top-1/2 left-1/4 w-12 h-12 bg-red-400 opacity-10 rounded-full"></div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="relative z-20 p-4 sm:p-6 text-white scale-90 transform">
+      <!-- Header con iconografía mejorada -->
+      <div class="text-center mb-8">
+        <!-- Icono principal -->
+        <div class="flex justify-center mb-5">
+          <div class="bg-white bg-opacity-20 backdrop-blur-sm p-3 rounded-full border border-white border-opacity-30">
+            <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zM14 6a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V8a2 2 0 012-2h8zM6 8a2 2 0 000 4h8a2 2 0 000-4H6z"/>
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Título principal -->
+        <h2 class="text-3xl md:text-4xl font-bold mb-3 tracking-tight">
+          Indicadores Económicos
+        </h2>
+        
+        <!-- Subtítulo con fecha -->
+        <div class="bg-white bg-opacity-15 backdrop-blur-sm rounded-full px-5 py-2 inline-block border border-white border-opacity-20">
+          <p class="text-base font-medium">
+            Valores del {{ indicadores.fecha_consulta|default:"18 de julio de 2025" }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Grid de indicadores mejorado -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-5xl mx-auto">
+        
+        <!-- Dólar -->
+        <div class="group bg-black bg-opacity-30 backdrop-blur-md rounded-xl p-5 border border-white border-opacity-20 
+                    hover:bg-opacity-40 hover:border-opacity-40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <!-- Icono mejorado -->
+            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-3 
+                        group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <span class="text-white font-bold text-xl">$</span>
+            </div>
+            
+            <!-- Valor -->
+            <div class="text-2xl font-bold mb-2 text-white group-hover:text-green-100 transition-colors">
+              {% if indicadores.dolar %}$ {{ indicadores.dolar|floatformat:2 }}{% else %}<span class="text-red-300">Error</span>{% endif %}
+            </div>
+            
+            <!-- Etiqueta -->
+            <div class="text-xs text-gray-200 font-medium">
+              Dólar Observado
+            </div>
+            
+            <!-- Indicador visual -->
+            <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mt-2">
+              <div class="w-3/4 h-full bg-gradient-to-r from-green-400 to-green-500 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Euro -->
+        <div class="group bg-black bg-opacity-30 backdrop-blur-md rounded-xl p-5 border border-white border-opacity-20 
+                    hover:bg-opacity-40 hover:border-opacity-40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <!-- Icono mejorado -->
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-3 
+                        group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <span class="text-white font-bold text-xl">€</span>
+            </div>
+            
+            <!-- Valor -->
+            <div class="text-2xl font-bold mb-2 text-white group-hover:text-blue-100 transition-colors">
+              {% if indicadores.euro %}$ {{ indicadores.euro|floatformat:2 }}{% else %}<span class="text-red-300">Error</span>{% endif %}
+            </div>
+            
+            <!-- Etiqueta -->
+            <div class="text-xs text-gray-200 font-medium">
+              Euro Observado
+            </div>
+            
+            <!-- Indicador visual -->
+            <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mt-2">
+              <div class="w-4/5 h-full bg-gradient-to-r from-blue-400 to-blue-500 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UF -->
+        <div class="group bg-black bg-opacity-30 backdrop-blur-md rounded-xl p-5 border border-white border-opacity-20 
+                    hover:bg-opacity-40 hover:border-opacity-40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <!-- Icono mejorado -->
+            <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-3 
+                        group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <span class="text-white font-bold text-base">UF</span>
+            </div>
+            
+            <!-- Valor -->
+            <div class="text-2xl font-bold mb-2 text-white group-hover:text-yellow-100 transition-colors">
+              {% if indicadores.uf %}$ {{ indicadores.uf|floatformat:2 }}{% else %}<span class="text-red-300">Error</span>{% endif %}
+            </div>
+            
+            <!-- Etiqueta -->
+            <div class="text-xs text-gray-200 font-medium">
+              Unidad de Fomento
+            </div>
+            
+            <!-- Indicador visual -->
+            <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mt-2">
+              <div class="w-5/6 h-full bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UTM -->
+        <div class="group bg-black bg-opacity-30 backdrop-blur-md rounded-xl p-5 border border-white border-opacity-20 
+                    hover:bg-opacity-40 hover:border-opacity-40 transition-all duration-300 hover:scale-105 hover:shadow-xl">
+          <div class="text-center">
+            <!-- Icono mejorado -->
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3 
+                        group-hover:scale-110 transition-transform duration-300 shadow-lg">
+              <span class="text-white font-bold text-xs">UTM</span>
+            </div>
+            
+            <!-- Valor -->
+            <div class="text-2xl font-bold mb-2 text-white group-hover:text-purple-100 transition-colors">
+              {% if indicadores.utm %}$ {{ indicadores.utm|floatformat:2 }}{% else %}<span class="text-red-300">Error</span>{% endif %}
+            </div>
+            
+            <!-- Etiqueta -->
+            <div class="text-xs text-gray-200 font-medium">
+              UTM ({{ indicadores.utm_mes|default:"JULIO"|upper }})
+            </div>
+            
+            <!-- Indicador visual -->
+            <div class="w-full h-1 bg-white bg-opacity-20 rounded-full mt-2">
+              <div class="w-2/3 h-full bg-gradient-to-r from-purple-400 to-purple-500 rounded-full"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Información adicional -->
+      <div class="mt-8 text-center">
+        <!-- Separador decorativo -->
+        <div class="flex items-center justify-center mb-5">
+          <div class="w-12 h-px bg-white bg-opacity-30"></div>
+          <div class="mx-3">
+            <svg class="w-5 h-5 text-white opacity-60" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="w-12 h-px bg-white bg-opacity-30"></div>
+        </div>
+
+        <!-- Footer con fuente mejorado -->
+        <div class="bg-white bg-opacity-10 backdrop-blur-sm rounded-xl p-5 border border-white border-opacity-20">
+          <div class="flex items-center justify-center mb-2">
+            <svg class="w-4 h-4 mr-2 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clip-rule="evenodd"/>
+            </svg>
+            <p class="text-base font-semibold text-white">
+              Fuente: Banco Central de Chile
+            </p>
+          </div>
+          
+          <p class="text-xs text-gray-200 max-w-xl mx-auto leading-relaxed">
+            Banco Central de Chile. Información sobre la garantía estatal de los depósitos en su banco o en 
+            <span class="text-blue-200 underline">www.cmfchile.cl</span>
+          </p>
+          
+          <!-- Timestamp de actualización -->
+          <div class="mt-3 flex items-center justify-center text-xs text-gray-300">
+            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+            </svg>
+            Última actualización: {{ indicadores.fecha_consulta|default:"Hoy" }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

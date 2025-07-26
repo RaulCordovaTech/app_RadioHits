@@ -1,0 +1,14 @@
+<!-- Modal de confirmación -->
+<div id="deleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-lg shadow-lg max-w-md w-full p-6">
+    <h2 class="text-lg font-semibold mb-4">¿Eliminar entrada?</h2>
+    <p id="modalEntryTitle" class="mb-6"></p>
+
+    <form id="deleteForm" method="post" class="flex justify-end gap-4">
+      {% csrf_token %}
+      <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 border rounded hover:bg-gray-100">Cancelar</button>
+      <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+    </form>
+  </div>
+</div>
+

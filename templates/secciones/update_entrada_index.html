@@ -1,0 +1,152 @@
+{% extends "base.html" %} {# Extiende la plantilla base.html, heredando su estructura HTML y posiblemente otros bloques. #}
+
+{% load static %} {# Carga las etiquetas para manejar archivos estáticos (CSS, JS, imágenes). #}
+{% load i18n %} {# Carga las etiquetas para internacionalización (i18n), aunque no se usan explícitamente aquí. #}
+{% load crispy_forms_tags %} {# Carga las etiquetas de Crispy Forms para un renderizado de formularios mejorado con Tailwind CSS. #}
+
+{% block content %} {# Define el bloque de contenido principal que será insertado en base.html. #}
+
+<header class="relative overflow-hidden">
+    {# Contenedor principal del encabezado con un gradiente de fondo oscuro y texto blanco. #}
+    {# 'relative' permite posicionar elementos absolutos dentro. 'overflow-hidden' recorta el contenido que se desborda. #}
+    <div class="bg-gradient-to-r from-black via-gray-900 to-black text-white py-8">
+        {# Contenedor interno para el contenido del encabezado, centrado horizontalmente y con padding. #}
+        {# 'relative z-10' asegura que este contenido esté por encima del fondo de ondas. #}
+        <div class="container mx-auto px-4 relative z-10">
+            {# Patrón de ondas de radio como fondo decorativo, posicionado absolutamente y con baja opacidad. #}
+            <div class="absolute inset-0 opacity-5">
+                <svg class="w-full h-full" viewBox="0 0 400 200" fill="none">
+                    {# Círculos concéntricos que forman el patrón de ondas, usando el color actual del texto (blanco). #}
+                    <circle cx="200" cy="100" r="20" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="40" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="60" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="80" stroke="currentColor" stroke-width="1"/>
+                </svg>
+            </div>
+            
+            {# Contenedor para el título y el logo, usando flexbox para alinearlos. #}
+            <div class="flex justify-between items-center">
+                {# Sección para el título del blog y el subtítulo. #}
+                <div class="flex-1">
+                    {# Título principal con tamaño responsivo, negrita y espaciado de letras. #}
+                    <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+                        <span class="text-white">Editar</span> {# Parte blanca del título. #}
+                        <span class="text-red-500 ml-2">Entrada</span> {# Parte roja del título. #}
+                    </h1>
+                    {# Contenedor para la línea decorativa y el texto de usuario. #}
+                    <div class="flex items-center mt-3 space-x-4">
+                        <div class="h-1 w-16 bg-red-500"></div> {# Línea roja decorativa. #}
+                        <p class="text-gray-300 text-lg">Panel de administración - {{ user.username }}</p> {# Muestra el nombre de usuario logueado. #}
+                    </div>
+                </div>
+                
+                {# Sección para el logo, visible solo en pantallas medianas y grandes. #}
+                <div class="hidden md:block">
+                    {# Contenedor para el logo con un efecto de pulso y desenfoque. #}
+                    <div class="relative">
+                        {# Efecto de pulso con blur, posicionado absolutamente detrás del logo. #}
+                        <div class="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                        {# Imagen del logo, redonda, con borde y sombra. #}
+                        <img src="{% static 'imagenes/logo.jpg' %}" alt="Radio Hits Iquique"
+                             class="relative h-20 w-20 object-contain rounded-full border-2 border-red-500 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {# Onda decorativa en la parte inferior del encabezado para una transición suave con el fondo. #}
+    <div class="relative">
+        <svg class="w-full h-6 text-black" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            {# Path que dibuja la forma de la onda. #}
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</header>
+
+{# Contenedor principal del cuerpo de la página, con fondo negro y padding. #}
+<div class="bg-black min-h-screen py-8">
+    {# Contenedor para el contenido principal, centrado horizontalmente. #}
+    <div class="container mx-auto px-4">
+        {# Sección para el botón "Volver al listado". #}
+        <div class="mb-8">
+            {# Enlace con estilo de botón para regresar al listado de entradas del blog. #}
+            {# 'group' permite aplicar estilos al icono SVG cuando se hace hover sobre el enlace. #}
+            <a href="{% url 'list_entradas_index' %}" 
+               class="group inline-flex items-center gap-3 text-white hover:text-red-400 transition-all duration-300 text-lg font-medium">
+                {# Círculo que contiene el icono, con cambio de color al hacer hover. #}
+                <div class="p-2 bg-gray-800 rounded-full group-hover:bg-red-500 transition-colors duration-300">
+                    {# Icono de flecha, se mueve ligeramente a la izquierda al hacer hover. #}
+                    <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </div>
+                <span>Volver al Listado de Entradas del Índice</span>
+            </a>
+        </div>
+
+        {# Contenedor principal del formulario, centrado, con gradiente, bordes redondeados y sombra. #}
+        <div class="max-w-3xl mx-auto p-6 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-700">
+            
+            {# Encabezado del formulario con icono y título. #}
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-700">
+                {# Círculo para el icono, con fondo semitransparente. #}
+                <div class="p-3 bg-red-500/20 rounded-full"> {# Cambiado a red-500/20 #}
+                    {# Icono de "editar" (lápiz). #}
+                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"> {# Cambiado a red-400 #}
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white">Editar Entrada del Índice</h1> {# Título del formulario. #}
+            </div>
+
+            {# Formulario HTML para añadir/editar una entrada del blog. #}
+            {# 'method="post"' para enviar datos de forma segura. #}
+            {# 'enctype="multipart/form-data"' es crucial para subir archivos (imágenes). #}
+            {# 'space-y-6' añade espacio vertical entre los elementos hijos directos. #}
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %} {# Token de seguridad requerido por Django para formularios POST. #}
+
+                <div>
+                    <label for="id_titulo" class="block text-lg font-medium text-gray-300 mb-2">Título</label>
+                    {{ form.titulo }}
+                    {% if form.titulo.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.titulo.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                {% if form.instance.imagen %}
+                <div class="mb-2">
+                    <p class="text-gray-300 text-sm mb-1">Imagen actual:</p>
+                    <img src="{{ form.instance.imagen.url }}" alt="Imagen actual" class="w-40 rounded-lg shadow-md border border-gray-600">
+                </div>
+                {% endif %}
+
+                <div>
+                    <label for="id_imagen" class="block text-lg font-medium text-gray-300 mb-2">Cambiar Imagen (opcional)</label>
+                    {{ form.imagen }}
+                    {% if form.imagen.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.imagen.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="id_texto" class="block text-lg font-medium text-gray-300 mb-2">Contenido</label>
+                    {{ form.texto }}
+                    {% if form.texto.errors %}
+                        <p class="text-red-500 text-sm mt-1">{{ form.texto.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105"> {# Cambiado a red-600/700/800 y hover:shadow-red-500 #}
+                    {# Icono de "actualizar" (check). #}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Actualizar Entrada
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} {# Fin del bloque de contenido. #}

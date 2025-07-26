@@ -1,0 +1,129 @@
+{% extends "base.html" %} {# Extiende la plantilla base para heredar la estructura común y el CSS #}
+
+{% load static %} {# Carga las etiquetas para manejar archivos estáticos, como imágenes y CSS #}
+{% load i18n %} {# Carga las etiquetas para internacionalización (aunque no se usan directamente aquí, se mantienen si la app las necesita) #}
+{% load crispy_forms_tags %} {# Carga las etiquetas para renderizar formularios de Django con estilos de Crispy Forms #}
+
+{% block content %} {# Define el bloque de contenido principal de la página #}
+
+{# Sección de cabecera con diseño moderno y responsivo #}
+<header class="relative overflow-hidden">
+    {# Contenedor principal de la cabecera con gradiente y padding #}
+    <div class="bg-gradient-to-r from-black via-gray-900 to-black text-white py-8">
+        {# Contenedor para el contenido interno de la cabecera, centrado y con padding horizontal #}
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="absolute inset-0 opacity-5">
+                <svg class="w-full h-full" viewBox="0 0 400 200" fill="none">
+                    <circle cx="200" cy="100" r="20" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="40" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="60" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="80" stroke="currentColor" stroke-width="1"/>
+                </svg>
+            </div>
+            
+            {# Contenido de la cabecera: título y logo #}
+            <div class="flex justify-between items-center">
+                {# Sección izquierda con el título y subtítulo #}
+                <div class="flex-1">
+                    {# Título principal de la página, con estilo de fuente grande y colores distintivos #}
+                    <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+                        <span class="text-white">Gestión de Entradas del</span>
+                        <span class="text-red-500 ml-2">Carrusel</span> {# Parte del título en color rojo para destacar #}
+                    </h1>
+                    {# Subtítulo con una línea decorativa #}
+                    <div class="flex items-center mt-3 space-x-4">
+                        <div class="h-1 w-16 bg-red-500"></div> {# Línea decorativa roja #}
+                        <p class="text-gray-300 text-lg">Panel de administración - En linea: {{ user.username }}</p> {# Muestra el nombre del usuario logueado #}
+                    </div>
+                </div>
+                
+                {# Sección derecha con el logo, visible solo en pantallas medianas y grandes #}
+                <div class="hidden md:block">
+                    <div class="relative">
+                        {# Efecto de blur y pulso para el logo #}
+                        <div class="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                        {# Imagen del logo con estilos de borde y sombra #}
+                        <img src="{% static 'imagenes/logo.jpg' %}" alt="Radio Hits Iquique"
+                             class="relative h-20 w-20 object-contain rounded-full border-2 border-red-500 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="relative">
+        <svg class="w-full h-6 text-black" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</header>
+
+<!-- {# Contenedor principal del contenido de la página #} -->
+<div class="bg-black min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <!-- {# Botón para volver al listado de entradas del carrusel #} -->
+        <div class="mb-8">
+            <a href="{% url 'list_entradas_index' %}" 
+               class="group inline-flex items-center gap-3 text-white hover:text-red-400 transition-all duration-300 text-lg font-medium">
+                <div class="p-2 bg-gray-800 rounded-full group-hover:bg-red-500 transition-colors duration-300">
+                    <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </div>
+                <span>Volver al Listado de Entradas del Carrusel</span>
+            </a>
+        </div>
+
+        <!-- {# Contenedor del formulario con estilos de tarjeta #} -->
+        <div class="max-w-3xl mx-auto p-6 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-700">
+            
+            {# Encabezado del formulario con icono y título #}
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-700">
+                <div class="p-3 bg-red-500/20 rounded-full">
+                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white">Nueva Entrada para el Carrusel</h1>
+            </div>
+
+            {# Formulario de publicación de entrada #}
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %} {# Token de seguridad requerido por Django para formularios #}
+
+                <div>
+                    <label for="id_titulo" class="block text-lg font-medium text-gray-300 mb-2">Título</label>
+                    {{ form.titulo }} {# Renderiza el campo 'titulo' del formulario de Django #}
+                    {% if form.titulo.errors %} {# Muestra errores de validación si existen para este campo #}
+                        <p class="text-red-500 text-sm mt-1">{{ form.titulo.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="id_imagen" class="block text-lg font-medium text-gray-300 mb-2">Imagen</label>
+                    {{ form.imagen }} {# Renderiza el campo 'imagen' del formulario de Django #}
+                    {% if form.imagen.errors %} {# Muestra errores de validación si existen para este campo #}
+                        <p class="text-red-500 text-sm mt-1">{{ form.imagen.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="id_texto" class="block text-lg font-medium text-gray-300 mb-2">Contenido</label>
+                    {{ form.texto }} {# Renderiza el campo 'texto' del formulario de Django #}
+                    {% if form.texto.errors %} {# Muestra errores de validación si existen para este campo #}
+                        <p class="text-red-500 text-sm mt-1">{{ form.texto.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Publicar Entrada
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```

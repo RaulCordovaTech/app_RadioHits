@@ -1,0 +1,289 @@
+<<<<<<< HEAD
+<!-- 
+Componente de widget flotante, movible y con opción de cierre.
+
+Funcionalidades:
+- Botón de llamada con animación de pulso y vibración.
+- El widget completo se puede arrastrar y soltar en cualquier parte de la pantalla.
+- Incluye un botón 'X' para cerrar/ocultar el widget.
+- Toda la lógica (HTML, CSS, JS) está contenida en este archivo.
+- El movimiento está restringido a los límites de la ventana para no perder el widget.
+- El clic en el teléfono activa la llamada, no el arrastre.
+-->
+
+<style>
+    /* Animación para el anillo que se expande */
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.75;
+        }
+        70% {
+            transform: scale(2);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+    }
+
+    /* Animación de vibración para el ícono */
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+</style>
+
+<!-- Contenedor principal del widget. Es el elemento que se puede mover. -->
+<div id="llamanos-widget" 
+     class="fixed bottom-6 right-6 z-50 cursor-move" 
+     style="touch-action: none;"
+     title="Puedes mover este ícono">
+
+    <!-- Botón para cerrar el widget -->
+    <button id="llamanos-close-btn" 
+            class="absolute -top-2 -right-2 z-10 flex items-center justify-center w-6 h-6 bg-red-600 text-white font-bold rounded-full shadow-md hover:bg-red-700 transition-colors" 
+            aria-label="Cerrar" 
+            title="Cerrar">
+        &times; <!-- Caracter 'x' para cerrar -->
+    </button>
+
+    <!-- Enlace de llamada (el ícono del teléfono) -->
+    <a href="tel:+56930044332" 
+       class="group relative flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-lg cursor-pointer transition-transform hover:scale-110"
+       aria-label="Llámanos"
+       title="Llámanos al +56 9 3004 4332">
+
+        <!-- Anillo pulsante -->
+        <span class="animate-[pulse-ring_2s_cubic-bezier(0.4,0,0.6,1)_infinite] absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+
+        <!-- Icono de teléfono con animación de vibración al pasar el mouse -->
+        <svg class="relative w-8 h-8 text-white group-hover:animate-[shake_0.82s_cubic-bezier(.36,.07,.19,.97)_both]" 
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+    </a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('llamanos-widget');
+    const closeBtn = document.getElementById('llamanos-close-btn');
+
+    if (!widget || !closeBtn) return;
+
+    // --- Funcionalidad para cerrar el widget ---
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que el evento de click active el arrastre
+        widget.style.display = 'none';
+    });
+
+    // --- Funcionalidad para mover el widget ---
+    const dragElement = (elmnt) => {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+        const dragMouseDown = (e) => {
+            // Si se hace clic en el enlace o en el botón de cerrar, no iniciar el arrastre
+            if (e.target.closest('a') || e.target.closest('button')) {
+                return;
+            }
+            e.preventDefault();
+
+            if (e.type === "touchstart") {
+                pos3 = e.touches[0].clientX;
+                pos4 = e.touches[0].clientY;
+                document.ontouchmove = elementDrag;
+                document.ontouchend = closeDragElement;
+            } else {
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmousemove = elementDrag;
+                document.onmouseup = closeDragElement;
+            }
+        };
+
+        const elementDrag = (e) => {
+            e.preventDefault();
+            let clientX, clientY;
+            if (e.type === "touchmove") {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            pos1 = pos3 - clientX;
+            pos2 = pos4 - clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+
+            // Calcula la nueva posición y la mantiene dentro de la ventana
+            const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
+            const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
+
+            elmnt.style.top = newTop + "px";
+            elmnt.style.left = newLeft + "px";
+        };
+
+        const closeDragElement = () => {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            document.ontouchend = null;
+            document.ontouchmove = null;
+        };
+
+        elmnt.onmousedown = dragMouseDown;
+        elmnt.ontouchstart = dragMouseDown;
+    };
+
+    dragElement(widget);
+});
+</script>
+=======
+<!-- 
+Componente de widget flotante, movible y con opción de cierre.
+
+Funcionalidades:
+- Botón de llamada con animación de pulso y vibración.
+- El widget completo se puede arrastrar y soltar en cualquier parte de la pantalla.
+- Incluye un botón 'X' para cerrar/ocultar el widget.
+- Toda la lógica (HTML, CSS, JS) está contenida en este archivo.
+- El movimiento está restringido a los límites de la ventana para no perder el widget.
+- El clic en el teléfono activa la llamada, no el arrastre.
+-->
+
+<style>
+    /* Animación para el anillo que se expande */
+    @keyframes pulse-ring {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.75;
+        }
+        70% {
+            transform: scale(2);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(0.95);
+            opacity: 0;
+        }
+    }
+
+    /* Animación de vibración para el ícono */
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+</style>
+
+<!-- Contenedor principal del widget. Es el elemento que se puede mover. -->
+<div id="llamanos-widget" 
+     class="fixed bottom-6 right-6 z-50 cursor-move" 
+     style="touch-action: none;"
+     title="Puedes mover este ícono">
+
+    <!-- Botón para cerrar el widget -->
+    <button id="llamanos-close-btn" 
+            class="absolute -top-2 -right-2 z-10 flex items-center justify-center w-6 h-6 bg-red-600 text-white font-bold rounded-full shadow-md hover:bg-red-700 transition-colors" 
+            aria-label="Cerrar" 
+            title="Cerrar">
+        &times; <!-- Caracter 'x' para cerrar -->
+    </button>
+
+    <!-- Enlace de llamada (el ícono del teléfono) -->
+    <a href="" 
+       class="group relative flex items-center justify-center w-16 h-16 bg-green-500 rounded-full shadow-lg cursor-pointer transition-transform hover:scale-110"
+       aria-label="Llámanos"
+       title="Llámanos al +56 9 3004 4332">
+
+        <!-- Anillo pulsante -->
+        <span class="animate-[pulse-ring_2s_cubic-bezier(0.4,0,0.6,1)_infinite] absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+
+        <!-- Icono de teléfono con animación de vibración al pasar el mouse -->
+        <svg class="relative w-8 h-8 text-white group-hover:animate-[shake_0.82s_cubic-bezier(.36,.07,.19,.97)_both]" 
+             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+    </a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const widget = document.getElementById('llamanos-widget');
+    const closeBtn = document.getElementById('llamanos-close-btn');
+
+    if (!widget || !closeBtn) return;
+
+    // --- Funcionalidad para cerrar el widget ---
+    closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Evita que el evento de click active el arrastre
+        widget.style.display = 'none';
+    });
+
+    // --- Funcionalidad para mover el widget ---
+    const dragElement = (elmnt) => {
+        let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+        const dragMouseDown = (e) => {
+            // Si se hace clic en el enlace o en el botón de cerrar, no iniciar el arrastre
+            if (e.target.closest('a') || e.target.closest('button')) {
+                return;
+            }
+            e.preventDefault();
+
+            if (e.type === "touchstart") {
+                pos3 = e.touches[0].clientX;
+                pos4 = e.touches[0].clientY;
+                document.ontouchmove = elementDrag;
+                document.ontouchend = closeDragElement;
+            } else {
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmousemove = elementDrag;
+                document.onmouseup = closeDragElement;
+            }
+        };
+
+        const elementDrag = (e) => {
+            e.preventDefault();
+            let clientX, clientY;
+            if (e.type === "touchmove") {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            pos1 = pos3 - clientX;
+            pos2 = pos4 - clientY;
+            pos3 = clientX;
+            pos4 = clientY;
+
+            // Calcula la nueva posición y la mantiene dentro de la ventana
+            const newTop = Math.max(0, Math.min(elmnt.offsetTop - pos2, window.innerHeight - elmnt.offsetHeight));
+            const newLeft = Math.max(0, Math.min(elmnt.offsetLeft - pos1, window.innerWidth - elmnt.offsetWidth));
+
+            elmnt.style.top = newTop + "px";
+            elmnt.style.left = newLeft + "px";
+        };
+
+        const closeDragElement = () => {
+            document.onmouseup = null;
+            document.onmousemove = null;
+            document.ontouchend = null;
+            document.ontouchmove = null;
+        };
+
+        elmnt.onmousedown = dragMouseDown;
+        elmnt.ontouchstart = dragMouseDown;
+    };
+
+    dragElement(widget);
+});
+</script>
+>>>>>>> e5dfc8e5893ed2d91268a85b8ff606f661101413

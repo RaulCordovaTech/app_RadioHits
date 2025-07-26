@@ -1,0 +1,53 @@
+<footer class="bg-black text-white flex flex-col space-y-4 justify-center m-0 w-full
+               left-0 z-50 py-4">
+
+    <nav class="flex justify-center flex-wrap gap-6 font-medium">
+        <!-- <a class="hover:text-gray-300" href="#">Home</a> -->
+        <a class="hover:text-gray-300" href="{% url 'about' %}">Quienes somos</a>
+        <div>
+            {% if user.is_authenticated %}
+        <!-- Logout con formulario -->
+        <div>
+          <form method="post" action="{% url 'logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="block text-white hover:text-gray-300 cursor-pointer">
+              Cerrar Sesión
+            </button>
+          </form>
+        </div>
+        {% else %}
+        <div>
+          <a href="{% url 'login' %}" class="block">Iniciar Sesión</a>
+        <div>
+        {% endif %}
+        </div>
+    </nav>
+
+    <div class="flex justify-center items-center flex-wrap gap-x-6 gap-y-3 px-4">
+        <!-- Texto y flecha animada -->
+        <div class="flex items-center gap-2" style="animation: live-indicator-pulse 1.5s infinite ease-in-out;">
+            <span class="font-medium">Nuestras redes sociales</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12.28,16.28a1,1,0,0,0,1.42,0l5-5a1,1,0,0,0,0-1.42l-5-5a1,1,0,0,0-1.42,1.42L15.59,11H3a1,1,0,0,0,0,2H15.59l-3.31,3.29A1,1,0,0,0,12.28,16.28Z"/>
+            </svg>
+        </div>
+
+        <!-- Iconos de redes sociales -->
+        <div class="flex justify-center space-x-5">
+            <a href="https://www.facebook.com/share/1AwXE37j6b/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.icons8.com/fluent/30/ffffff/facebook-new.png" />
+            </a>
+            <a href="https://www.instagram.com/radiohits.iqq?igsh=MTg3NGEzc3J4bml1aA==" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.icons8.com/fluent/30/ffffff/instagram-new.png" />
+            </a>
+            <a href="https://wa.me/+56930044322" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.icons8.com/fluent/30/ffffff/whatsapp.png" />
+            </a>
+            <a href="https://www.tiktok.com/@fiestas70s80s90sconlahit?_t=ZS-8y2OKwKbwPw&_r=1" target="_blank" rel="noopener noreferrer">
+                <img src="https://img.icons8.com/fluent/30/ffffff/tiktok.png" />
+            </a>
+        </div>
+    </div>
+    <p class="text-center text-md">&copy; 2025 Radio Hits Iquique.</p>
+    <p class="text-center text-md text-gray-500">Sitio desarrollado por: Ingeniería y Soluciones Informáticas RCordova Tech</p>
+</footer>

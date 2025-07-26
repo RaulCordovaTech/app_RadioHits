@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block title %} Eventos {% endblock %}
+
+{% block content %}
+
+<!-- Navbar fijo -->
+<div class="fixed top-0 left-0 w-full h-16 z-50">
+    {% include 'componentes/navbar.html' %}
+</div>
+
+<!-- Botón Volver al Inicio, visible sobre la imagen -->
+<div class="absolute top-20 left-4 z-40">
+    <a href="{% url 'index' %}" class="inline-flex items-center gap-2 bg-black bg-opacity-60 text-white hover:text-gray-300 px-4 py-2 rounded-md shadow transition-colors duration-200 text-sm">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Volver al Inicio
+    </a>
+</div>
+
+<!-- Imagen de fondo (pantalla completa menos navbar) -->
+<img 
+    src="{% static 'imagenes/construccion.jpg' %}" 
+    alt="Sitio en construcción"
+    class="w-full h-[calc(100vh-4rem)] mt-16 object-cover"
+/>
+
+{% endblock %}
