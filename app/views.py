@@ -19,24 +19,37 @@ from django.contrib import messages
 from .models import (
     EntradaIndex,
     BlogEntrada,
-    # Asegúrate de que el modelo User esté importado o disponible si se usa en ForeignKey
-    # from django.contrib.auth.models import User
+    Lunes,  # Importa los modelos de los días de la semana
+    Martes,
+    Miercoles,
+    Jueves,
+    Viernes,
+    Sabado,
+    Domingo
 )
 
 # Importar los forms necesarios
 from .forms import (
     EntradaIndexForm,
-    BlogEntradaForm
+    BlogEntradaForm,
+    LunesForm,  # Importa los formularios de los días de la semana
+    MartesForm,
+    MiercolesForm,
+    JuevesForm,
+    ViernesForm,
+    SabadoForm,
+    DomingoForm
 )
 
 # --- VISTAS GENERALES Y DE SECCIONES ESTÁTICAS ---
-# Estas vistas manejan páginas informativas o funcionalidades que no están directamente ligadas a un único modelo de contenido dinámico.
+# En views.py, modificar la clase IndexView para incluir los programas semanales
 
 class IndexView(TemplateView):
     """
     Vista principal (Home) del sitio.
-    Muestra indicadores económicos obtenidos de una API externa y las 3 entradas más recientes
-    del modelo EntradaIndex para el carrusel.
+    Muestra indicadores económicos, las 3 entradas más recientes
+    del modelo EntradaIndex, los formularios de programación semanal
+    y la programación semanal completa.
     """
     template_name = 'index.html'
 
@@ -84,7 +97,28 @@ class IndexView(TemplateView):
 
         # Obtener las 3 entradas más recientes del modelo EntradaIndex para el carrusel
         context['entradas'] = EntradaIndex.objects.order_by('-id')[:3]
+
+        # Añadir los formularios de programación semanal al contexto
+        context['form_lunes'] = LunesForm()
+        context['form_martes'] = MartesForm()
+        context['form_miercoles'] = MiercolesForm()
+        context['form_jueves'] = JuevesForm()
+        context['form_viernes'] = ViernesForm()
+        context['form_sabado'] = SabadoForm()
+        context['form_domingo'] = DomingoForm()
+
+        # *** NUEVA SECCIÓN: Añadir programación semanal ***
+        # Obtener todos los programas de cada día ordenados por hora de inicio
+        context['programas_lunes'] = Lunes.objects.all().order_by('hora_inicio')
+        context['programas_martes'] = Martes.objects.all().order_by('hora_inicio')
+        context['programas_miercoles'] = Miercoles.objects.all().order_by('hora_inicio')
+        context['programas_jueves'] = Jueves.objects.all().order_by('hora_inicio')
+        context['programas_viernes'] = Viernes.objects.all().order_by('hora_inicio')
+        context['programas_sabado'] = Sabado.objects.all().order_by('hora_inicio')
+        context['programas_domingo'] = Domingo.objects.all().order_by('hora_inicio')
+
         return context
+#------------------------------------------------------------------------------------------------------------------------
 
 class EventosView(TemplateView):
     """
@@ -153,7 +187,7 @@ class UpdateEntradaIndexView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 #----------------------------------------------------------------------------------------------------
-#AQUI DEBE IR LA VISTA PARA ELIMINAR ENTRADAS DEL ÍNDICE
+# AQUI DEBE IR LA VISTA PARA ELIMINAR ENTRADAS DEL ÍNDICE
 def delete_entrada_index(request, pk):
     """
     Vista basada en función para eliminar una entrada del índice.
@@ -162,12 +196,12 @@ def delete_entrada_index(request, pk):
     """
     # Obtener la entrada o devolver 404 si no existe o no pertenece al usuario
     entrada = get_object_or_404(EntradaIndex, id=pk, autor=request.user)
-    
+
     # Solo permitir eliminación si el usuario está autenticado (redundante por LoginRequiredMixin en URL, pero buena práctica)
     if not request.user.is_authenticated:
         messages.error(request, 'Debes estar autenticado para realizar esta acción.')
         return redirect('list_entradas_index')
-    
+
     titulo_entrada = entrada.titulo # Guarda el título antes de eliminar para el mensaje
     entrada.delete() # Elimina la entrada
     messages.success(request, f'La entrada "{titulo_entrada}" ha sido eliminada correctamente.') # Mensaje de confirmación
@@ -244,10 +278,10 @@ class ListEntradasIndexView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Obtener el año actual
         año_actual = datetime.now().year
-        
+
         # Obtener los años únicos de las entradas existentes para el filtro
         años_con_entradas = set()
         if EntradaIndex.objects.exists():
@@ -256,7 +290,7 @@ class ListEntradasIndexView(LoginRequiredMixin, ListView):
             for fecha in años_query:
                 if fecha and fecha.year:
                     años_con_entradas.add(fecha.year)
-        
+
         # Asegurarse de que el año actual siempre esté en la lista de años disponibles
         años_con_entradas.add(año_actual)
         años_lista = sorted(list(años_con_entradas), reverse=True) # Ordenar de más nuevo a más viejo
@@ -280,7 +314,7 @@ class ListEntradasIndexView(LoginRequiredMixin, ListView):
         # Mantener los valores de filtro seleccionados en el contexto
         context['selected_year'] = self.request.GET.get('year')
         context['selected_month'] = self.request.GET.get('month')
-        
+
         # Convertir a entero si son dígitos válidos
         context['selected_year_int'] = int(context['selected_year']) if context['selected_year'] and context['selected_year'].isdigit() else None
         context['selected_month_int'] = int(context['selected_month']) if context['selected_month'] and context['selected_month'].isdigit() else None
@@ -292,19 +326,14 @@ class ListEntradasIndexView(LoginRequiredMixin, ListView):
         if context['selected_month']:
             filter_params['month'] = context['selected_month']
         context['filter_params'] = filter_params
-        
+
         # Información adicional de paginación
         paginator = context.get('paginator')
         if paginator:
             context['total_entries'] = paginator.count
             context['entries_per_page'] = self.paginate_by
-            
+
         return context
-
-
-
-
-
 
 # --- VISTAS RELACIONADAS CON EL MODELO BlogEntrada ---
 # Estas vistas gestionan la creación, lectura, actualización y eliminación (CRUD)
@@ -339,7 +368,7 @@ class UpdateEntradaBlogView(LoginRequiredMixin, UpdateView):
     def get_queryset(self):
         # Asegura que solo el autor de la entrada pueda modificarla
         return BlogEntrada.objects.filter(autor=self.request.user)
-    
+
     def form_valid(self, form):
         messages.success(self.request, '¡Entrada modificada exitosamente!') # Mensaje de éxito
         return super().form_valid(form)
@@ -352,12 +381,12 @@ def delete_entrada_blog(request, pk):
     """
     # Obtener la entrada o devolver 404 si no existe o no pertenece al usuario
     entrada = get_object_or_404(BlogEntrada, id=pk, autor=request.user)
-    
+
     # Solo permitir eliminación si el usuario está autenticado (redundante por LoginRequiredMixin en URL, pero buena práctica)
     if not request.user.is_authenticated:
         messages.error(request, 'Debes estar autenticado para realizar esta acción.')
         return redirect('list_entradas_blog')
-    
+
     titulo_entrada = entrada.titulo # Guarda el título antes de eliminar para el mensaje
     entrada.delete() # Elimina la entrada
     messages.success(request, f'La entrada "{titulo_entrada}" ha sido eliminada exitosamente.') # Mensaje de confirmación
@@ -379,13 +408,13 @@ class BlogGeneralView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
+
         # Información adicional de paginación (total de entradas, entradas por página)
         paginator = context.get('paginator')
         if paginator:
             context['total_entries'] = paginator.count
             context['entries_per_page'] = self.paginate_by
-            
+
         return context
 
 class BlogView(TemplateView):
@@ -424,11 +453,11 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         queryset = BlogEntrada.objects.all()
-        
+
         # Obtener parámetros de filtro de la URL (GET request)
         year = self.request.GET.get('year')
         month = self.request.GET.get('month')
-        
+
         # Aplicar filtros por año y mes usando .extra() para control directo SQL
         # Esto es para evitar problemas de zona horaria con funciones de Django si el motor DB es MySQL/MariaDB
         if year:
@@ -441,7 +470,7 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
                 )
             except (ValueError, TypeError):
                 pass # Ignora valores inválidos
-        
+
         if month:
             try:
                 month_int = int(month)
@@ -452,7 +481,7 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
                 )
             except (ValueError, TypeError):
                 pass # Ignora valores inválidos
-        
+
         # Ordenar las entradas por fecha de publicación de forma descendente (más reciente primero)
         return queryset.order_by('-fecha_publicacion')
 
@@ -461,7 +490,7 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
 
         # Obtener el año actual
         año_actual = datetime.now().year
-        
+
         # Obtener los años únicos de las entradas existentes para el filtro
         años_con_entradas = set()
         if BlogEntrada.objects.exists():
@@ -470,11 +499,11 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
             for fecha in años_query:
                 if fecha and fecha.year:
                     años_con_entradas.add(fecha.year)
-        
+
         # Asegurarse de que el año actual siempre esté en la lista de años disponibles
         años_con_entradas.add(año_actual)
         años_lista = sorted(list(años_con_entradas), reverse=True) # Ordenar de más nuevo a más viejo
-        
+
         # Preparar la lista de años para el contexto de la plantilla, indicando el año actual
         context['años'] = []
         for año in años_lista:
@@ -494,7 +523,7 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
         # Mantener los valores de filtro seleccionados en el contexto
         context['selected_year'] = self.request.GET.get('year')
         context['selected_month'] = self.request.GET.get('month')
-        
+
         # Convertir a entero si son dígitos válidos
         context['selected_year_int'] = int(context['selected_year']) if context['selected_year'] and context['selected_year'].isdigit() else None
         context['selected_month_int'] = int(context['selected_month']) if context['selected_month'] and context['selected_month'].isdigit() else None
@@ -506,11 +535,515 @@ class ListEntradasBlogView(LoginRequiredMixin, ListView):
         if context['selected_month']:
             filter_params['month'] = context['selected_month']
         context['filter_params'] = filter_params
-        
+
         # Información adicional de paginación
         paginator = context.get('paginator')
         if paginator:
             context['total_entries'] = paginator.count
             context['entries_per_page'] = self.paginate_by
-            
+
         return context
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+# VISTAS PARA LA PROGRAMACIÓN SEMANAL (CreateView para cada día)
+
+class AddProgramaLunes(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Lunes.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Lunes
+    form_class = LunesForm
+    template_name = 'programacion_semanal/add_programa_lunes.html' 
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Captura el 'return_day' del parámetro GET, si no existe, por defecto es 'lunes'
+        context['return_day'] = self.request.GET.get('return_day', 'lunes') 
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Lunes agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Usar el return_day que se pasó en la URL al ir a la página de agregar
+        return_day = self.request.GET.get('return_day', 'lunes') 
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+
+class AddProgramaMartes(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Martes.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Martes
+    form_class = MartesForm
+    template_name = 'programacion_semanal/add_programa_martes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'martes') 
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Martes agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'martes')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+class AddProgramaMiercoles(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Miércoles.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Miercoles
+    form_class = MiercolesForm
+    template_name = 'programacion_semanal/add_programa_miercoles.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'miercoles')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Miércoles agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'miercoles')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+class AddProgramaJueves(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Jueves.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Jueves
+    form_class = JuevesForm
+    template_name = 'programacion_semanal/add_programa_jueves.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'jueves')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Jueves agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'jueves')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+class AddProgramaViernes(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Viernes.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Viernes
+    form_class = ViernesForm
+    template_name = 'programacion_semanal/add_programa_viernes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'viernes')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Viernes agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'viernes')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+class AddProgramaSabado(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Sábado.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Sabado
+    form_class = SabadoForm
+    template_name = 'programacion_semanal/add_programa_sabado.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'sabado')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Sábado agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self,):
+        return_day = self.request.GET.get('return_day', 'sabado')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+class AddProgramaDomingo(LoginRequiredMixin, CreateView):
+    """
+    Vista para agregar un programa para el Domingo.
+    Requiere que el usuario esté autenticado.
+    """
+    model = Domingo
+    form_class = DomingoForm
+    template_name = 'programacion_semanal/add_programa_domingo.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'domingo')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Domingo agregado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'domingo')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# VISTA PARA LISTAR LA PROGRAMACIÓN SEMANAL
+
+class ListProgramacionSemanal(LoginRequiredMixin, TemplateView):
+    """
+    Vista para listar la programación semanal completa, con opción de filtrar por día.
+    Requiere que el usuario esté autenticado.
+    """
+    template_name = 'administracion/list_programacion.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Diccionario para almacenar los programas de cada día
+        programas_por_dia = {
+            'lunes': Lunes.objects.all().order_by('hora_inicio'),
+            'martes': Martes.objects.all().order_by('hora_inicio'),
+            'miercoles': Miercoles.objects.all().order_by('hora_inicio'),
+            'jueves': Jueves.objects.all().order_by('hora_inicio'),
+            'viernes': Viernes.objects.all().order_by('hora_inicio'),
+            'sabado': Sabado.objects.all().order_by('hora_inicio'),
+            'domingo': Domingo.objects.all().order_by('hora_inicio'),
+        }
+        context['programas_por_dia'] = programas_por_dia
+
+        # Lista de días de la semana para el filtro
+        dias_semana = [
+            {'value': 'lunes', 'display': 'Lunes'},
+            {'value': 'martes', 'display': 'Martes'},
+            {'value': 'miercoles', 'display': 'Miércoles'},
+            {'value': 'jueves', 'display': 'Jueves'},
+            {'value': 'viernes', 'display': 'Viernes'},
+            {'value': 'sabado', 'display': 'Sábado'},
+            {'value': 'domingo', 'display': 'Domingo'},
+            {'value': 'todos', 'display': 'Todos los días'} # Opción para ver todos
+        ]
+        context['dias_semana'] = dias_semana
+
+        # Obtener el día seleccionado del parámetro GET
+        # Si no hay 'day' en GET, intenta obtener 'return_day' (si se vino de un 'add_programa'),
+        # de lo contrario, por defecto es 'lunes'.
+        selected_day = self.request.GET.get('day', self.request.GET.get('return_day', 'lunes'))
+        context['selected_day'] = selected_day
+
+        # Preparar los programas a mostrar según el día seleccionado
+        if selected_day == 'todos':
+            context['programas_activos'] = programas_por_dia # Pasa el diccionario completo
+        else:
+            context['programas_activos'] = {selected_day: programas_por_dia.get(selected_day, [])}
+
+
+        return context
+    
+
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+# VISTAS UPDATE PARA LA PROGRAMACIÓN SEMANAL (UpdateView para cada día)
+
+class UpdateProgramaLunes(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Lunes existente.
+    Requiere autenticación.
+    """
+    model = Lunes
+    form_class = LunesForm
+    template_name = 'programacion_semanal/update_programa_lunes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Captura el 'return_day' del parámetro GET, si no existe, por defecto es 'lunes'
+        context['return_day'] = self.request.GET.get('return_day', 'lunes')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Lunes modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # Usar el return_day que se pasó en la URL al ir a la página de modificar
+        return_day = self.request.GET.get('return_day', 'lunes')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaMartes(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Martes existente.
+    Requiere autenticación.
+    """
+    model = Martes
+    form_class = MartesForm
+    template_name = 'programacion_semanal/update_programa_martes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'martes')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Martes modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'martes')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaMiercoles(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Miércoles existente.
+    Requiere autenticación.
+    """
+    model = Miercoles
+    form_class = MiercolesForm
+    template_name = 'programacion_semanal/update_programa_miercoles.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'miercoles')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Miércoles modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'miercoles')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaJueves(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Jueves existente.
+    Requiere autenticación.
+    """
+    model = Jueves
+    form_class = JuevesForm
+    template_name = 'programacion_semanal/update_programa_jueves.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'jueves')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Jueves modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'jueves')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaViernes(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Viernes existente.
+    Requiere autenticación.
+    """
+    model = Viernes
+    form_class = ViernesForm
+    template_name = 'programacion_semanal/update_programa_viernes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'viernes')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Viernes modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'viernes')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaSabado(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Sábado existente.
+    Requiere autenticación.
+    """
+    model = Sabado
+    form_class = SabadoForm
+    template_name = 'programacion_semanal/update_programa_sabado.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'sabado')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Sábado modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'sabado')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+class UpdateProgramaDomingo(LoginRequiredMixin, UpdateView):
+    """
+    Vista para modificar un programa de Domingo existente.
+    Requiere autenticación.
+    """
+    model = Domingo
+    form_class = DomingoForm
+    template_name = 'programacion_semanal/update_programa_domingo.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['return_day'] = self.request.GET.get('return_day', 'domingo')
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, '¡Programa de Domingo modificado correctamente!')
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return_day = self.request.GET.get('return_day', 'domingo')
+        return reverse_lazy('list_programacion') + f'?day={return_day}'
+
+# ----------------------------------------------------------------------------------------------------------------------------------------------------
+# VISTAS DELETE PARA LA PROGRAMACIÓN SEMANAL (Funciones de eliminación para cada día)
+
+def delete_programa_lunes(request, pk):
+    """
+    Vista para eliminar un programa del día Lunes.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Lunes, pk=pk)
+    dia_actual = 'lunes'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Lunes.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_martes(request, pk):
+    """
+    Vista para eliminar un programa del día Martes.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Martes, pk=pk)
+    dia_actual = 'martes'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Martes.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_miercoles(request, pk):
+    """
+    Vista para eliminar un programa del día Miercoles.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Miercoles, pk=pk)
+    dia_actual = 'miercoles'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Miercoles.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_jueves(request, pk):
+    """
+    Vista para eliminar un programa del día Jueves.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Jueves, pk=pk)
+    dia_actual = 'jueves'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Jueves.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_viernes(request, pk):
+    """
+    Vista para eliminar un programa del día Viernes.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Viernes, pk=pk)
+    dia_actual = 'viernes'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Viernes.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_sabado(request, pk):
+    """
+    Vista para eliminar un programa del día Sábado.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Sabado, pk=pk)
+    dia_actual = 'sabado'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Sabado.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')
+
+def delete_programa_domingo(request, pk):
+    """
+    Vista para eliminar un programa del día Domingo.
+    Redirige al mismo día si aún hay programas, o a la vista de todos los días si no quedan.
+    """
+    programa = get_object_or_404(Domingo, pk=pk)
+    dia_actual = 'domingo'
+    programa.delete()
+    messages.success(request, f'El programa del día {dia_actual} ha sido eliminado correctamente.')
+    if Domingo.objects.count() > 0:
+        # Redirigir al mismo día si hay registros restantes
+        return redirect(f"{reverse_lazy('list_programacion')}?day={dia_actual}")
+    else:
+        # Redirigir a "todos los días" si no quedan registros
+        return redirect('list_programacion')

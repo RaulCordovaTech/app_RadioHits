@@ -30,3 +30,74 @@ class BlogEntrada(models.Model):
     def __str__(self):
         return self.titulo
 
+
+#MODELOS PARA LA PROGRAMAVIÓN SEMANAL DE RADIO HITS
+
+#--------------------------------------------------------------------------------------------------------------------------------------
+#MODELO LUNES
+class Lunes(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+
+#--------------------------------------------------------------------------------------------------------------------------------------   
+#MODELO MARTES
+class Martes(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+
+#--------------------------------------------------------------------------------------------------------------------------------------   
+#MODELO MIERCOLES
+class Miercoles(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+    
+#--------------------------------------------------------------------------------------------------------------------------------------
+#MODELO JUEVES
+class Jueves(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+#--------------------------------------------------------------------------------------------------------------------------------------
+#MODELO VIERNES
+class Viernes(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+#--------------------------------------------------------------------------------------------------------------------------------------
+#MODELO SÁBADO
+class Sabado(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+#--------------------------------------------------------------------------------------------------------------------------------------
+#MODELO DOMINGO
+class Domingo(models.Model):
+    hora_inicio = models.TimeField(verbose_name='Hora de inicio')
+    hora_fin = models.TimeField(verbose_name='Hora de fin')
+    nombre_programa = models.CharField(max_length=200, verbose_name='Nombre del programa')
+
+    def __str__(self):
+        return self.nombre_programa
+#--------------------------------------------------------------------------------------------------------------------------------------
+

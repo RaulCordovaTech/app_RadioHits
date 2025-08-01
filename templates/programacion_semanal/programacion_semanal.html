@@ -1,0 +1,186 @@
+<!-- Sección de Programación de Radio Hits -->
+<div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl overflow-hidden shadow-2xl border border-gray-700">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 p-6 text-center">
+        <div class="flex items-center justify-center mb-2">
+            <svg class="w-8 h-8 text-white mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
+            </svg>
+            <h2 class="text-3xl font-bold text-white">Programación Semanal</h2>
+        </div>
+        <p class="text-red-100">Tu música favorita todos los días</p>
+    </div>
+
+    <!-- Contenido de programación -->
+    <div class="p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+            <!-- Lunes -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Lunes</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_lunes %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Martes -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Martes</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_martes %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Miércoles -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Miércoles</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_miercoles %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Jueves -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Jueves</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_jueves %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Viernes -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Viernes</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_viernes %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Sábado -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Sábado</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_sabado %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Domingo -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-700 hover:border-red-500 transition-all duration-300">
+                <div class="flex items-center mb-4">
+                    <div class="bg-red-600 p-2 rounded-full mr-3">
+                        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400">Domingo</h3>
+                </div>
+                <div class="space-y-2">
+                    {% for programa in programas_domingo %}
+                    <div class="flex items-center p-2 bg-gray-700 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold mr-3 min-w-fit">
+                            {{ programa.hora_inicio|time:"H:i" }} - {{ programa.hora_fin|time:"H:i" }}
+                        </div>
+                        <span class="text-white text-sm font-medium">{{ programa.nombre_programa }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="text-gray-400 text-sm italic">Sin programación</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

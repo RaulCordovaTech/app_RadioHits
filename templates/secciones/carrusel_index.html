@@ -9,14 +9,14 @@
 <body class="bg-gray-100 p-4">
 
 <div class="w-full overflow-hidden">
-  <div class="relative w-full h-auto min-h-[400px] md:h-[500px]">
+  <div class="relative w-full h-auto min-h-[550px] md:h-[500px]">
     <div class="absolute inset-0 flex transition-all duration-700 ease-in-out" id="carousel-container">
       {% for entrada in entradas %}
         <div class="w-full flex-shrink-0 flex justify-center items-center px-2 sm:px-4 md:px-6 py-4">
           <!-- Card único centrado -->
-          <div class="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col lg:flex-row min-h-[350px] md:min-h-[400px]">
-            <!-- Imagen -->
-            <div class="w-full lg:w-1/2 h-48 sm:h-56 md:h-64 lg:h-auto flex items-center justify-center overflow-hidden bg-gray-200">
+          <div class="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden flex flex-col lg:flex-row min-h-[500px] md:min-h-[400px]">
+            <!-- Imagen con mayor altura en móviles -->
+            <div class="w-full lg:w-1/2 h-80 sm:h-96 md:h-64 lg:h-auto flex items-center justify-center overflow-hidden bg-gray-200">
               <img src="{{ entrada.imagen.url }}" alt="{{ entrada.titulo }}" class="object-cover w-full h-full hover:scale-105 transition-transform duration-300">
             </div>
 
@@ -29,7 +29,7 @@
         </div>
       {% empty %}
         <div class="w-full flex-shrink-0 flex justify-center items-center px-2 sm:px-4 md:px-6 py-4">
-          <div class="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden min-h-[350px] md:min-h-[400px] flex items-center justify-center">
+          <div class="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden min-h-[500px] md:min-h-[400px] flex items-center justify-center">
             <p class="text-center text-gray-500 text-sm md:text-base">No hay entradas para mostrar.</p>
           </div>
         </div>

@@ -1,0 +1,138 @@
+{% extends "base.html" %} {# Extiende la plantilla base.html, heredando su estructura HTML y posiblemente otros bloques. #}
+
+{% load static %} {# Carga las etiquetas para manejar archivos estáticos (CSS, JS, imágenes). #}
+{% load i18n %} {# Carga las etiquetas para internacionalización (i18n), aunque no se usan explícitamente aquí. #}
+{% load crispy_forms_tags %} {# Carga las etiquetas de Crispy Forms para un renderizado de formularios mejorado con Tailwind CSS. #}
+
+{% block title %}Agregar Programa Lunes{% endblock %}
+
+{% block content %}
+<header class="relative overflow-hidden">
+    {# Contenedor principal del encabezado con un gradiente de fondo oscuro y texto blanco. #}
+    {# 'relative' permite posicionar elementos absolutos dentro. 'overflow-hidden' recorta el contenido que se desborda. #}
+    <div class="bg-gradient-to-r from-black via-gray-900 to-black text-white py-8">
+        {# Contenedor interno para el contenido del encabezado, centrado horizontalmente y con padding. #}
+        {# 'relative z-10' asegura que este contenido esté por encima del fondo de ondas. #}
+        <div class="container mx-auto px-4 relative z-10">
+            {# Patrón de ondas de radio como fondo decorativo, posicionado absolutamente y con baja opacidad. #}
+            <div class="absolute inset-0 opacity-5">
+                <svg class="w-full h-full" viewBox="0 0 400 200" fill="none">
+                    {# Círculos concéntricos que forman el patrón de ondas, usando el color actual del texto (blanco). #}
+                    <circle cx="200" cy="100" r="20" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="40" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="60" stroke="currentColor" stroke-width="1"/>
+                    <circle cx="200" cy="100" r="80" stroke="currentColor" stroke-width="1"/>
+                </svg>
+            </div>
+            
+            {# Contenedor para el título y el logo, usando flexbox para alinearlos. #}
+            <div class="flex justify-between items-center">
+                {# Sección para el título del blog y el subtítulo. #}
+                <div class="flex-1">
+                    {# Título principal con tamaño responsivo, negrita y espaciado de letras. #}
+                    <h1 class="text-4xl md:text-5xl font-bold tracking-tight">
+                        <span class="text-white">Gestión de la</span> {# Parte blanca del título. #}
+                        <span class="text-red-500 ml-2">Programación</span> {# Parte roja del título. #}
+                    </h1>
+                    {# Contenedor para la línea decorativa y el texto de usuario. #}
+                    <div class="flex items-center mt-3 space-x-4">
+                        <div class="h-1 w-16 bg-red-500"></div> {# Línea roja decorativa. #}
+                        <p class="text-gray-300 text-lg">Panel de administración - {{ user.username }}</p> {# Muestra el nombre de usuario logueado. #}
+                    </div>
+                </div>
+                
+                {# Sección para el logo, visible solo en pantallas medianas y grandes. #}
+                <div class="hidden md:block">
+                    {# Contenedor para el logo con un efecto de pulso y desenfoque. #}
+                    <div class="relative">
+                        {# Efecto de pulso con blur, posicionado absolutamente detrás del logo. #}
+                        <div class="absolute inset-0 bg-red-500 rounded-full blur-xl opacity-20 animate-pulse"></div>
+                        {# Imagen del logo, redonda, con borde y sombra. #}
+                        <img src="{% static 'imagenes/logo.jpg' %}" alt="Radio Hits Iquique"
+                             class="relative h-20 w-20 object-contain rounded-full border-2 border-red-500 shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {# Onda decorativa en la parte inferior del encabezado para una transición suave con el fondo. #}
+    <div class="relative">
+        <svg class="w-full h-6 text-black" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            {# Path que dibuja la forma de la onda. #}
+            <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="currentColor"></path>
+        </svg>
+    </div>
+</header>
+
+
+{# Contenedor principal del cuerpo de la página, con fondo negro y padding. #}
+<div class="bg-black min-h-screen py-8">
+    {# Contenedor para el contenido principal, centrado horizontalmente. #}
+    <div class="container mx-auto px-4">
+        {# Sección para el botón "Volver al listado". (Puedes adaptar esto si tienes una lista de programas) #}
+        <div class="mb-8">
+            {# Enlace con estilo de botón para regresar al índice o a una lista de programas si existe. #}
+            <a href="{% url 'list_programacion' %}?day={{ return_day }}" 
+               class="group inline-flex items-center gap-3 text-white hover:text-red-400 transition-all duration-300 text-lg text-md">
+                {# Círculo que contiene el icono, con cambio de color al hacer hover. #}
+                <div class="p-2 bg-gray-800 rounded-full group-hover:bg-red-500 transition-colors duration-300">
+                    {# Icono de flecha, se mueve ligeramente a la izquierda al hacer hover. #}
+                    <svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </div>
+                <span>Volver al Listado de Programación</span>
+            </a>
+        </div>
+
+        {# Contenedor principal del formulario, centrado, con gradiente, bordes redondeados y sombra. #}
+        <div class="max-w-2xl mx-auto p-6 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-2xl border border-gray-700">
+            
+            {# Encabezado del formulario con icono y título. #}
+            <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-700">
+                {# Círculo para el icono, con fondo semitransparente. #}
+                <div class="p-3 bg-red-500/20 rounded-full">
+                    {# Icono de "añadir" (signo más). #}
+                    <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white">Nueva Programación Día Lunes</h1> {# Título del formulario. #}
+            </div>
+
+            {# Formulario HTML para añadir un programa. #}
+            {# 'method="post"' para enviar datos de forma segura. #}
+            {# 'space-y-6' añade espacio vertical entre los elementos hijos directos. #}
+            <form method="post" class="space-y-6">
+                {% csrf_token %} {# Token de seguridad requerido por Django para formularios POST. #}
+
+                {# Loop para renderizar todos los campos del formulario dinámicamente. #}
+                {% for field in form %}
+                    <div class="mb-4">
+                        {# Etiqueta del campo. #}
+                        <label for="{{ field.id_for_label }}" class="block text-white text-lg text-md mb-2">{{ field.label }}</label>
+                        {# Renderiza el campo de Django. #}
+                        {{ field }}
+                        {% if field.help_text %} {# Muestra el texto de ayuda si está disponible. #}
+                            <p class="text-gray-400 text-sm mt-1">{{ field.help_text }}</p>
+                        {% endif %}
+                        {% for error in field.errors %} {# Muestra errores de validación para el campo. #}
+                            <p class="text-red-500 text-sm mt-1">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                {# Botón de envío del formulario "Guardar Programa". #}
+                <button type="submit" class="w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-red-500/25 transition-all duration-300 transform hover:scale-105">
+                    {# Icono de "guardar" (disquete o similar, se puede cambiar) dentro del botón. #}
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-3m-1-4l-3 3m0 0l-3-3m3 3V4"></path>
+                    </svg>
+                    Guardar Programa
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} {# Fin del bloque de contenido. #}
