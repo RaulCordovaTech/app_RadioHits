@@ -1,50 +1,77 @@
+<!-- ========================================= -->
+<!-- INDEX.HTML - PÁGINA PRINCIPAL           -->
+<!-- ========================================= -->
+
+<!-- Extensión del template base -->
 {% extends "base.html" %}
 {% load static %}
 
+<!-- Definición del título específico de la página -->
 {% block title %}Inicio - Radio Hits{% endblock %}
 
-
 {% block content %}
-<!-- Navbar fijo arriba -->
+<!-- ================================= -->
+<!-- NAVBAR FIJO SUPERIOR              -->
+<!-- ================================= -->
+
+<!-- Contenedor fijo para el navbar -->
 <div class="fixed top-0 left-0 w-full h-16 z-50">
     {% include 'componentes/navbar.html' %}
 </div>
 
-<!-- Contenido principal -->
+<!-- ================================= -->
+<!-- CONTENIDO PRINCIPAL               -->
+<!-- ================================= -->
+
+<!-- Main container con padding para compensar navbar y reproductor flotante -->
 <main class="flex-1 pt-20 pb-32 px-4">
 
-<div id="ww_4a73af15f5c9c" v='1.3' loc='id' a='{"t":"responsive","lang":"es","sl_lpl":1,"ids":["wl10185"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>Más previsiones: <a href="https://oneweather.org/santiago/30_days/" id="ww_4a73af15f5c9c_u" target="_blank">Santiago de Chile 30 days weather forecast</a></div><script async src="https://app3.weatherwidget.org/js/?id=ww_4a73af15f5c9c"></script> 
+    <!-- ===== WIDGET DEL CLIMA ===== -->
+    <!-- Widget personalizado del clima para Santiago de Chile -->
+    <div id="ww_4a73af15f5c9c" v='1.3' loc='id' a='{"t":"responsive","lang":"es","sl_lpl":1,"ids":["wl10185"],"font":"Arial","sl_ics":"one_a","sl_sot":"celsius","cl_bkg":"image","cl_font":"#FFFFFF","cl_cloud":"#FFFFFF","cl_persp":"#81D4FA","cl_sun":"#FFC107","cl_moon":"#FFC107","cl_thund":"#FF5722"}'>
+        <!-- Enlace de respaldo al pronóstico completo -->
+        Más previsiones: <a href="https://oneweather.org/santiago/30_days/" id="ww_4a73af15f5c9c_u" target="_blank">Santiago de Chile 30 days weather forecast</a>
+    </div>
+    <!-- Script asíncrono para cargar el widget del clima -->
+    <script async src="https://app3.weatherwidget.org/js/?id=ww_4a73af15f5c9c"></script>
 
-    <!-- Sección principal con reproductor y publicidad -->
+    <!-- ===== SECCIÓN PRINCIPAL CON LAYOUT RESPONSIVO ===== -->
+    <!-- Contenedor principal que se adapta de columna a fila según el tamaño de pantalla -->
     <div class="flex flex-col md:flex-row justify-between items-center w-full mt-6 space-y-6 md:space-y-0 md:space-x-8">
-        <!-- Imagen de publicidad + texto del evento -->
+        <!-- Carrusel de imágenes promocionales y eventos -->
         {% include 'secciones/carrusel_index.html'%}
     </div>
 
+    <!-- ===== SECCIÓN DE CONTACTO ===== -->
     <div>
         {% include 'componentes/llamanos.html' %}
     </div>
 
+    <!-- ================================= -->
+    <!-- SEPARADORES Y SECCIONES          -->
+    <!-- ================================= -->
 
-    <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-     <div>
+    <!-- ===== SECCIÓN DE ACCESO AL BLOG ===== -->
+    <div>
         {% include 'secciones/acceso_blog.html' %}
     </div>
 
-    <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-     <div>
+    <!-- ===== SECCIÓN DE FIESTAS Y EVENTOS ===== -->
+    <div>
         {% include 'secciones/fiestas_eventos.html' %}
     </div>
 
-    <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- Separador elegante -->
+    <!-- ===== SEPARADOR ELEGANTE CON ÍCONO DE ESTRELLA ===== -->
     <div class="max-w-7xl mx-auto px-4 my-16">
         <div class="relative">
+            <!-- Línea horizontal de separación -->
             <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t-2 border-gradient-to-r from-transparent via-red-300 to-transparent"></div>
             </div>
+            <!-- Contenedor central para el ícono -->
             <div class="relative flex justify-center">
                 <div class="bg-white px-6 py-2 rounded-full shadow-md">
+                    <!-- Ícono SVG de estrella -->
                     <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                     </svg>
@@ -52,65 +79,61 @@
             </div>
         </div>
     </div>
-    <!-- ---------------------------------------------------------------------------------------------------------------------------- -->
 
-    <!-- Sección de WhatsApp Community - AHORA DEBAJO DE TODO -->
-<div class="mt-16 w-full max-w-3xl mx-auto px-4">
-  <div
-    class="bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-  >
-    <!-- Ícono grande de WhatsApp, centrado arriba -->
-    <div class="flex justify-center mb-4">
-      <svg
-        class="w-10 h-10 fill-white"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"
-        />
-      </svg>
+    <!-- ================================= -->
+    <!-- SECCIÓN WHATSAPP COMMUNITY        -->
+    <!-- ================================= -->
+
+    <!-- Sección prominente para unirse al grupo de WhatsApp -->
+    <div class="mt-16 w-full max-w-3xl mx-auto px-4">
+        <!-- Contenedor principal con gradiente verde de WhatsApp y efectos hover -->
+        <div class="bg-gradient-to-r from-green-600 to-green-500 text-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            
+            <!-- ===== ÍCONO PRINCIPAL DE WHATSAPP ===== -->
+            <div class="flex justify-center mb-4">
+                <!-- SVG del logo de WhatsApp -->
+                <svg class="w-10 h-10 fill-white" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
+                </svg>
+            </div>
+
+            <!-- ===== TÍTULO Y BOTÓN PRINCIPAL ===== -->
+            <div class="text-center">
+                <!-- Título llamativo para la comunidad -->
+                <h3 class="text-2xl font-bold mb-2">¡Únete a nuestra comunidad!</h3>
+                
+                <!-- Botón de llamada a la acción para unirse al grupo -->
+                <a href="https://chat.whatsapp.com/FVaz3H2qvCYG001iwp3fXc?mode=ac_t"
+                   target="_blank"
+                   class="inline-flex items-center space-x-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg mx-auto">
+                    
+                    <!-- Ícono pequeño de WhatsApp junto al texto del botón -->
+                    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
+                    </svg>
+                    <span>Grupo de WhatsApp</span>
+                </a>
+            </div>
+
+            <!-- ===== TEXTO DESCRIPTIVO ===== -->
+            <!-- Descripción de los beneficios de unirse al grupo -->
+            <p class="text-lg text-green-100 text-center mt-4">
+                Recibe noticias, participa en sorteos y mantente al día con Radio Hits
+            </p>
+        </div>
     </div>
 
-    <!-- Título y botón centrados -->
-    <div class="text-center">
-      <h3 class="text-2xl font-bold mb-2">¡Únete a nuestra comunidad!</h3>
-      <a
-        href="https://chat.whatsapp.com/FVaz3H2qvCYG001iwp3fXc?mode=ac_t"
-        target="_blank"
-        class="inline-flex items-center space-x-2 bg-white text-green-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-lg mx-auto"
-      >
-        <!-- Icono pequeño de WhatsApp junto al texto -->
-        <svg
-          class="w-5 h-5 fill-current"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <path
-            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"
-          />
-        </svg>
-        <span>Grupo de WhatsApp</span>
-      </a>
-    </div>
-
-    <!-- Texto descriptivo -->
-    <p class="text-lg text-green-100 text-center mt-4">
-      Recibe noticias, participa en sorteos y mantente al día con Radio Hits
-    </p>
-  </div>
-</div>
-
-<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-
- <!-- Separador elegante -->
+    <!-- ===== SEPARADOR ELEGANTE CON ÍCONO DE LAYOUT ===== -->
     <div class="max-w-7xl mx-auto px-4 my-16">
         <div class="relative">
+            <!-- Línea de separación más sutil -->
             <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-gray-300"></div>
             </div>
+            <!-- Contenedor del ícono -->
             <div class="relative flex justify-center">
                 <div class="bg-white px-6 py-2 rounded-full shadow-md">
+                    <!-- Ícono SVG de layout/organización -->
                     <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
                     </svg>
@@ -118,17 +141,22 @@
             </div>
         </div>
     </div>
-<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
-    <!-- Indicadores Económicos -->
-{% include 'componentes/indicadores.html' %}
-<!-- Separador elegante -->
+
+    <!-- ===== INDICADORES ECONÓMICOS ===== -->
+    <!-- Componente que muestra información económica actualizada -->
+    {% include 'componentes/indicadores.html' %}
+
+    <!-- ===== SEPARADOR ELEGANTE CON ÍCONO DE MÚSICA ===== -->
     <div class="max-w-7xl mx-auto px-4 my-16">
         <div class="relative">
+            <!-- Línea de separación -->
             <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-gray-300"></div>
             </div>
+            <!-- Contenedor del ícono musical -->
             <div class="relative flex justify-center">
                 <div class="bg-white px-6 py-2 rounded-full shadow-md">
+                    <!-- Ícono SVG de música -->
                     <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"/>
                     </svg>
@@ -136,24 +164,111 @@
             </div>
         </div>
     </div>
-<!-- ---------------------------------------------------------------------------------------------------------------------------- -->
 
-<!-- ---------------------------------------------------------------------------------------------------------------------------- -->   
+    <!-- ================================= -->
+    <!-- PROGRAMACIÓN DE RADIO HITS        -->
+    <!-- ================================= -->
 
-    <!-- Sección de Programación de Radio Hits -->
-<!-- Contenido de programación -->
-                <div>
-    {% include 'programacion_semanal/programacion_semanal.html' %}
-</div>
+    <!-- ===== SECCIÓN DE PROGRAMACIÓN SEMANAL ===== -->
+    <!-- Componente que muestra la programación completa de la radio -->
+    <div>
+        {% include 'programacion_semanal/programacion_semanal.html' %}
+    </div>
+
 </main>
 
+<!-- ================================= -->
+<!-- FOOTER                            -->
+<!-- ================================= -->
 
-
-
-
-
+<!-- Componente del pie de página con información de contacto y enlaces -->
 <div>
     {% include 'componentes/footer.html' %}
 </div>
 
 {% endblock %}
+
+<!-- ========================================= -->
+<!-- NOTAS DE DESARROLLO                      -->
+<!-- ========================================= -->
+
+<!--
+ESTRUCTURA GENERAL:
+- El sitio utiliza un sistema de templates de Django con herencia
+- Base.html proporciona la estructura común (head, scripts, reproductor)
+- Index.html extiende base.html y define el contenido específico de la página principal
+
+COMPONENTES MODULARES:
+- Cada sección está separada en su propio archivo include
+- Esto facilita el mantenimiento y la reutilización de código
+- Los componentes pueden ser actualizados independientemente
+
+DISEÑO RESPONSIVO:
+- Utiliza Tailwind CSS para un diseño mobile-first
+- Breakpoints definidos: sm, md, lg, xl
+- Flexbox y Grid para layouts adaptativos
+
+FUNCIONALIDADES INTERACTIVAS:
+- Reproductor de radio flotante y arrastrable
+- Sistema de alertas con SweetAlert2
+- Animaciones CSS personalizadas
+- Soporte completo para dispositivos táctiles
+
+OPTIMIZACIONES:
+- CDN para bibliotecas externas (carga rápida)
+- Lazy loading implícito para componentes include
+- Compresión de assets en producción
+- Caché de archivos estáticos
+
+ACCESIBILIDAD:
+- Elementos semánticos HTML5
+- Contraste adecuado de colores
+- Navegación por teclado soportada
+- Textos alternativos para elementos visuales
+
+SEGURIDAD:
+- Validación de entrada en formularios
+- Protección CSRF en Django
+- Sanitización de contenido dinámico
+- Headers de seguridad configurados
+
+MANTENIMIENTO:
+- Código comentado y documentado
+- Convenciones de nomenclatura consistentes
+- Separación clara de responsabilidades
+- Logs de errores y monitoreo
+-->
+
+<!--
+MEJORAS FUTURAS SUGERIDAS:
+
+1. PERFORMANCE:
+   - Implementar Service Worker para caché offline
+   - Optimizar imágenes con lazy loading explícito
+   - Minificar CSS y JS en producción
+   - Implementar compresión GZIP
+
+2. FUNCIONALIDAD:
+   - Agregar modo nocturno/diurno
+   - Implementar notificaciones push
+   - Agregar reproductor de podcasts
+   - Sistema de favoritos para programas
+
+3. ANALÍTICA:
+   - Integrar Google Analytics
+   - Tracking de eventos de usuario
+   - Métricas de engagement del reproductor
+   - A/B testing para CTAs
+
+4. SEO:
+   - Meta tags dinámicos por página
+   - Structured data (Schema.org)
+   - Sitemap XML automático
+   - Open Graph para redes sociales
+
+5. ACCESIBILIDAD:
+   - Soporte para lectores de pantalla
+   - Navegación por teclado mejorada
+   - Modo de alto contraste
+   - Subtítulos para contenido multimedia
+-->

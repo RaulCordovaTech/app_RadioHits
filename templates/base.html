@@ -1,118 +1,171 @@
+<!-- ========================================= -->
+<!-- BASE.HTML - TEMPLATE PRINCIPAL          -->
+<!-- ========================================= -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <!-- Configuración básica del documento -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título dinámico con sistema de bloques Django -->
     <title>{% block title %}Radio Hits{% endblock %}</title>
+    
+    <!-- Framework CSS Tailwind - Versión estable y CDN dinámico -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- SweetAlert2 - Biblioteca para alertas modernas y elegantes -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    
+    <!-- Bloque para head adicional en templates hijos -->
     {% block head %}{% endblock %}
 </head>
 
+<!-- Body con gradiente oscuro como fondo corporativo -->
 <body class="bg-gradient-to-r from-black via-gray-900 to-black">
+    <!-- Contenido principal que será reemplazado por templates hijos -->
     {% block content %}{% endblock %}
+    
+    <!-- Carga de archivos estáticos de Django -->
     {% load static %}
 
-    <!-- #COMPONENTE DE RADIO -->
+    <!-- ================================= -->
+    <!-- COMPONENTE DE RADIO FLOTANTE     -->
+    <!-- ================================= -->
+    
+    <!-- Contenedor principal del reproductor flotante -->
     <div id="radio-floating-wrapper" style="
-        position: fixed;
-        top: 80vh;
-        left: 1rem;
-        width: 200px;
-        max-width: 90vw;
-        height: 65px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        background-image: url('{% static "imagenes/logo.jpg" %}');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center left;
-        padding-left: 70px;
-        display: flex;
-        align-items: center;
-        z-index: 9999;
-        background-color: black;
-        overflow: visible; /* Cambiado para que el indicador "EN VIVO" no se corte */
-        touch-action: none;
-        cursor: move;
+        position: fixed;              /* Posición fija para que siempre esté visible */
+        top: 80vh;                   /* Posicionado en la parte inferior de la pantalla */
+        left: 1rem;                  /* Margen izquierdo inicial */
+        width: 200px;                /* Ancho base del reproductor */
+        max-width: 90vw;             /* Máximo ancho responsivo */
+        height: 65px;                /* Altura fija del componente */
+        border-radius: 10px;         /* Bordes redondeados */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Sombra sutil */
+        background-image: url('{% static "imagenes/logo.jpg" %}'); /* Logo de fondo */
+        background-size: contain;     /* Logo redimensionado proporcionalmente */
+        background-repeat: no-repeat; /* No repetir el logo */
+        background-position: center left; /* Logo alineado a la izquierda */
+        padding-left: 70px;          /* Espacio para el logo */
+        display: flex;               /* Layout flexbox */
+        align-items: center;         /* Centrado vertical */
+        z-index: 9999;              /* Z-index alto para estar sobre otros elementos */
+        background-color: black;     /* Color de fondo de respaldo */
+        overflow: visible;           /* Permite que el indicador EN VIVO sobresalga */
+        touch-action: none;          /* Desactiva gestos nativos del navegador */
+        cursor: move;                /* Cursor indica que es arrastrable */
     ">
-        <!-- Indicador "EN VIVO" pulsante -->
+        <!-- Indicador "EN VIVO" con animación pulsante -->
         <div class="absolute -top-2.5 -right-2.5 z-10 pointer-events-none" 
              style="animation: live-indicator-pulse 1.5s infinite ease-in-out;">
             <div class="flex items-center bg-red-600 text-white text-xs font-bold uppercase px-3 py-1 rounded-full shadow-xl">
+                <!-- Punto animado que simula LED -->
                 <span class="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
                 En Vivo
             </div>
         </div>
 
+        <!-- iFrame que contiene el reproductor de audio real -->
         <iframe
-        src="https://radio.tvstream.cl/8034/stream"
-        id="radio-iframe"
-        allow="autoplay"
-        style="
-            border: none;
-            width: 90%;
-            height: 60px;
-            border-radius: 8px;
-            background: transparent;
-        "
-    ></iframe>
+            src="https://radio.tvstream.cl/8034/stream"  <!-- URL del stream de audio -->
+            id="radio-iframe"
+            allow="autoplay"                              <!-- Permite reproducción automática -->
+            style="
+                border: none;              /* Sin bordes para integración limpia */
+                width: 90%;               /* Ocupa la mayoría del contenedor */
+                height: 60px;             /* Altura específica */
+                border-radius: 8px;       /* Bordes redondeados */
+                background: transparent;   /* Fondo transparente */
+            "
+        ></iframe>
     </div>
 
+    <!-- ================================= -->
+    <!-- ESTILOS CSS ADICIONALES          -->
+    <!-- ================================= -->
+    
     <style>
+        /* Estilos responsivos para dispositivos móviles */
         @media (max-width: 480px) {
             #radio-floating-wrapper {
-                width: 90vw;
-                height: 55px;
-                padding-left: 60px;
+                width: 90vw;              /* Ancho casi completo en móvil */
+                height: 55px;             /* Altura reducida */
+                padding-left: 60px;       /* Padding reducido */
             }
 
             #radio-iframe {
-                height: 40px;
+                height: 40px;             /* Altura del iframe reducida */
             }
         }
 
-        /* Animación para el indicador "EN VIVO" */
+        /* Animación personalizada para el indicador "EN VIVO" */
         @keyframes live-indicator-pulse {
             0%, 100% {
-                transform: scale(1);
-                filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8));
+                transform: scale(1);      /* Tamaño normal */
+                filter: drop-shadow(0 0 5px rgba(239, 68, 68, 0.8)); /* Sombra sutil */
             }
             50% {
-                transform: scale(1.05);
-                filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1));
+                transform: scale(1.05);   /* Ligeramente más grande */
+                filter: drop-shadow(0 0 12px rgba(239, 68, 68, 1));  /* Sombra más intensa */
             }
         }
     </style>
 
+    <!-- ================================= -->
+    <!-- JAVASCRIPT PARA FUNCIONALIDAD    -->
+    <!-- ================================= -->
+    
     <script>
+        /**
+         * Función para hacer el reproductor arrastrable
+         * Soporta tanto eventos de mouse como eventos táctiles
+         * @param {HTMLElement} elmnt - Elemento a hacer arrastrable
+         */
         const dragElement = (elmnt) => {
+            // Variables para tracking de posición
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-            elmnt.onmousedown = dragMouseDown;
-            elmnt.ontouchstart = dragMouseDown;
+            // Asignar manejadores de eventos para inicio de arrastre
+            elmnt.onmousedown = dragMouseDown;   // Para mouse
+            elmnt.ontouchstart = dragMouseDown;  // Para touch screens
 
+            /**
+             * Función que se ejecuta al iniciar el arrastre
+             * @param {Event} e - Evento del mouse o touch
+             */
             function dragMouseDown(e) {
                 e = e || window.event;
-                e.preventDefault();
+                e.preventDefault(); // Prevenir comportamiento por defecto
 
+                // Determinar tipo de evento y configurar posición inicial
                 if (e.type === "touchstart") {
                     pos3 = e.touches[0].clientX;
                     pos4 = e.touches[0].clientY;
+                    // Asignar manejadores para eventos táctiles
                     document.ontouchmove = elementDrag;
                     document.ontouchend = closeDragElement;
                 } else {
                     pos3 = e.clientX;
                     pos4 = e.clientY;
+                    // Asignar manejadores para eventos de mouse
                     document.onmousemove = elementDrag;
                     document.onmouseup = closeDragElement;
                 }
             }
 
+            /**
+             * Función que se ejecuta durante el arrastre
+             * Calcula nueva posición y mueve el elemento
+             * @param {Event} e - Evento de movimiento
+             */
             function elementDrag(e) {
                 e = e || window.event;
                 e.preventDefault();
+                
+                // Calcular diferencia de posición según tipo de evento
                 if (e.type === "touchmove") {
                     pos1 = pos3 - e.touches[0].clientX;
                     pos2 = pos4 - e.touches[0].clientY;
@@ -124,10 +177,16 @@
                     pos3 = e.clientX;
                     pos4 = e.clientY;
                 }
+                
+                // Aplicar nueva posición al elemento
                 elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
                 elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
             }
 
+            /**
+             * Función para finalizar el arrastre
+             * Limpia todos los manejadores de eventos
+             */
             function closeDragElement() {
                 document.onmouseup = null;
                 document.onmousemove = null;
@@ -136,9 +195,15 @@
             }
         };
 
+        // Inicializar funcionalidad de arrastre en el reproductor
         dragElement(document.getElementById("radio-floating-wrapper"));
     </script>
 
+    <!-- ================================= -->
+    <!-- SISTEMA DE MENSAJES DJANGO       -->
+    <!-- ================================= -->
+    
+    <!-- Contenedor oculto para mensajes de Django que serán procesados por JavaScript -->
     <div class="django-messages" style="display: none;">
         {% if messages %}
             {% for message in messages %}
@@ -147,26 +212,38 @@
         {% endif %}
     </div>
 
+    <!-- ================================= -->
+    <!-- SCRIPTS PRINCIPALES               -->
+    <!-- ================================= -->
+    
     {% block scripts %}
     <script>
-        // Mixin para botones de SweetAlert2 con estilo Bootstrap/Tailwind
+        /**
+         * Configuración personalizada de SweetAlert2
+         * Define estilos para botones que coinciden con Tailwind CSS
+         */
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mx-2",
                 cancelButton: "bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mx-2"
             },
-            buttonsStyling: false
+            buttonsStyling: false // Usar estilos personalizados en lugar de los predeterminados
         });
 
-        // Función genérica para mostrar un SweetAlert (no toast, sin botón de confirmación, duración 1700ms)
+        /**
+         * Función genérica para mostrar alertas temporales
+         * @param {string} icon - Tipo de icono (success, error, warning, info)
+         * @param {string} title - Título de la alerta
+         * @param {string} text - Texto descriptivo
+         */
         function showAlert(icon, title, text) {
             Swal.fire({
                 icon: icon,
                 title: title,
-                html: `<div class="text-lg">${text}</div>`, // Texto más grande
-                showConfirmButton: false,
-                timer: 1700,
-                timerProgressBar: true,
+                html: `<div class="text-lg">${text}</div>`, // Texto con mayor tamaño
+                showConfirmButton: false,    // Sin botón de confirmación
+                timer: 1700,                // Duración de 1.7 segundos
+                timerProgressBar: true,     // Barra de progreso del timer
                 showClass: {
                     popup: 'animate__animated animate__fadeInUp animate__faster'
                 },
@@ -176,7 +253,11 @@
             });
         }
 
-        // Función para mostrar SweetAlert para errores (alerta centrada con botón OK)
+        /**
+         * Función específica para alertas de error
+         * Estas alertas requieren confirmación del usuario
+         * @param {string} message - Mensaje de error a mostrar
+         */
         function showErrorAlert(message) {
             Swal.fire({
                 title: '¡Error!',
@@ -186,7 +267,11 @@
             });
         }
 
-        // Función para eliminar entrada del índice
+        /**
+         * Función para confirmar eliminación de entradas del blog
+         * @param {number} entradaId - ID de la entrada a eliminar
+         * @param {string} entradaTitulo - Título de la entrada para mostrar en confirmación
+         */
         function confirmDeleteEntradaIndex(entradaId, entradaTitulo) {
             swalWithBootstrapButtons.fire({
                 title: "¿Estás seguro?",
@@ -198,9 +283,10 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Solo redirigir, el mensaje de éxito vendrá de Django
+                    // Redirigir a URL de eliminación si se confirma
                     window.location.href = `/delete_entrada_index/${entradaId}/`;
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // Mostrar mensaje de cancelación
                     swalWithBootstrapButtons.fire({
                         title: "Cancelado",
                         text: "La entrada está a salvo :)",
@@ -211,8 +297,11 @@
             });
         }
 
+        /**
+         * Inicialización cuando el DOM está completamente cargado
+         */
         document.addEventListener('DOMContentLoaded', function() {
-            // Manejo de mensajes de Django con SweetAlert2
+            // ===== Procesamiento de mensajes de Django =====
             const djangoMessagesDiv = document.querySelector('.django-messages');
             if (djangoMessagesDiv) {
                 const messages = djangoMessagesDiv.querySelectorAll('.alert');
@@ -220,6 +309,7 @@
                     const text = message.textContent.trim();
                     const tags = message.className.replace('alert alert-', '').split(' ')[0];
 
+                    // Mostrar alerta según el tipo de mensaje
                     if (tags.includes('success')) {
                         showAlert('success', '¡Operación Exitosa!', text);
                     } else if (tags.includes('error')) {
@@ -229,16 +319,18 @@
                     } else if (tags.includes('info')) {
                         showAlert('info', 'Información', text);
                     }
-                    message.style.display = 'none'; // Ocultar mensaje original después de procesar
+                    // Ocultar mensaje original después de procesarlo
+                    message.style.display = 'none';
                 });
             }
 
-            // Manejo de eliminación para list_entradas_blog con SweetAlert2 (clase deleteButton)
+            // ===== Manejadores para botones de eliminación =====
             document.querySelectorAll('.deleteButton').forEach(button => {
                 button.addEventListener('click', function() {
-                    const url = this.dataset.url;
-                    const name = this.dataset.name;
+                    const url = this.dataset.url;   // URL de eliminación
+                    const name = this.dataset.name; // Nombre del elemento a eliminar
 
+                    // Mostrar confirmación antes de eliminar
                     swalWithBootstrapButtons.fire({
                         title: '¿Estás seguro?',
                         text: `¿Deseas eliminar la entrada "${name}"? Esta acción no se puede deshacer.`,
@@ -249,9 +341,10 @@
                         reverseButtons: true
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            // Solo redirigir, el mensaje de éxito vendrá de Django
+                            // Proceder con la eliminación
                             window.location.href = url;
                         } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // Mostrar cancelación
                             swalWithBootstrapButtons.fire({
                                 title: "Cancelado",
                                 text: "La entrada está a salvo :)",
